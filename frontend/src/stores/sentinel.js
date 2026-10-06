@@ -1,62 +1,161 @@
-import { defineStore } from 'pinia';
-import { WebSocketService } from '../services/websocket';
+import { reactive, computed } from 'vue'
+import * as api from '../services/api'
 
-export const useSentinelStore = defineStore('sentinel', {
-  state: () => ({
-    connected: false,
-    wsService: null,
-    metrics: {
-      dht22_temp: null,
-      mq2_gas: null,
-      pir_motion: false,
-      anomaly_score: null,
-    },
-    actuators: {
-      buzzer: false,
-      led_mode: 'AUTO',
-    },
-    alerts: [],
-    history: {
-      labels: [],
-      temp: [],
-      gas: [],
-    }
-  }),
-  actions: {
-    initWebSocket() {
-      const wsUrl = `wss://${window.location.hostname}:8443/ws`;
-      this.wsService = new WebSocketService(wsUrl, this.handleRealtimeData);
-      this.wsService.connect();
-    },
-    handleRealtimeData(data) {
-      if (data.type === 'telemetry') {
-        this.metrics = { ...this.metrics, ...data.payload };
-        
-        // Mise à jour de l'historique Chart.js
-        const timeStr = new Date().toLocaleTimeString();
-        this.history.labels.push(timeStr);
-        this.history.temp.push(data.payload.dht22_temp);
-        this.history.gas.push(data.payload.mq2_gas);
+const MAX_POINTS = 300
+const MAX_ALERTS = 100
+const HISTORY_MINUTES = 10
 
-        if (this.history.labels.length > 20) {
-          this.history.labels.shift();
-          this.history.temp.shift();
-          this.history.gas.shift();
-        }
-      } else if (data.type === 'alert') {
-        this.alerts.unshift(data.payload);
-      }
-    },
-    toggleBuzzer() {
-      this.actuators.buzzer = !this.actuators.buzzer;
-      this.wsService.send({ type: 'command', target: 'buzzer', state: this.actuators.buzzer });
-    },
-    setLedMode(mode) {
-      this.actuators.led_mode = mode;
-      this.wsService.send({ type: 'command', target: 'leds', mode });
-    },
-    acknowledgeAlert(id) {
-      this.alerts = this.alerts.filter(a => a.id !== id);
-    }
+const ERRORS = {
+  403: 'Action réservée aux superviseurs.',
+  429: 'Trop de tentatives, réessayez dans une minute.',
+}
+
+function sessionUser() {
+  const s = api.getSession()
+  return s ? { username: s.username, role: s.role } : null
+}
+
+export const state = reactive({
+  authenticated: api.hasToken(),
+  user: sessionUser(),
+  live: false,
+  status: null,
+  telemetry: [],
+  alerts: [],
+  commands: {},
+  error: null,
+})
+
+let stopLive = null
+let expiryTimer = null
+
+// ---------- Getters ----------
+
+export const isSupervisor = computed(() => state.user?.role === 'supervisor')
+
+export const latest = computed(() => state.telemetry.at(-1) ?? null)
+
+export const activeAlerts = computed(() =>
+  state.alerts.filter((a) => a.event === 'raised' && !a.acknowledged)
+)
+
+export const chart = computed(() => ({
+  labels: state.telemetry.map((t) => t.received_at),
+  temperature: state.telemetry.map((t) => t.sensors.temperature_c ?? null),
+  humidity: state.telemetry.map((t) => t.sensors.humidity_pct ?? null),
+  gas: state.telemetry.map((t) => t.sensors.gas_ppm ?? null),
+}))
+
+// ---------- Messages temps réel ----------
+
+function upsertAlert(alert) {
+  const i = state.alerts.findIndex((a) => a.id === alert.id)
+  if (i >= 0) state.alerts[i] = alert
+  else state.alerts.unshift(alert)
+  if (state.alerts.length > MAX_ALERTS) state.alerts.length = MAX_ALERTS
+}
+
+function handleMessage({ type, data }) {
+  switch (type) {
+    case 'telemetry':
+      state.telemetry.push(data)
+      if (state.telemetry.length > MAX_POINTS) state.telemetry.shift()
+      break
+    case 'alert':
+      upsertAlert(data)
+      break
+    case 'status':
+      state.status = data
+      break
+    case 'command':
+      state.commands[data.id] = { ...state.commands[data.id], ...data }
+      break
   }
-});
+}
+
+// ---------- Actions ----------
+
+async function loadHistory() {
+  const since = new Date(Date.now() - HISTORY_MINUTES * 60000).toISOString()
+  const [status, telemetry, alerts] = await Promise.all([
+    api.getStatus(),
+    api.getTelemetry({ since, limit: MAX_POINTS }),
+    api.getAlerts({ limit: 50 }),
+  ])
+  state.status = status
+  state.telemetry = telemetry.items
+  state.alerts = alerts.items
+}
+
+async function guarded(fn) {
+  try {
+    state.error = null
+    return await fn()
+  } catch (e) {
+    if (e.status === 401) {
+      state.authenticated = false
+      state.user = null
+    }
+    state.error = ERRORS[e.status] || (e.status === 401 ? 'Identifiants incorrects ou session expirée.' : e.message)
+    throw e
+  }
+}
+
+function scheduleExpiry() {
+  clearTimeout(expiryTimer)
+  const s = api.getSession()
+  if (!s) return
+  expiryTimer = setTimeout(() => {
+    actions.logout()
+    state.error = 'Session expirée, reconnectez-vous.'
+  }, Math.max(0, s.expires_at - Date.now()))
+}
+
+export const actions = {
+  async login(username, password) {
+    await guarded(() => api.login(username, password))
+    state.authenticated = true
+    state.user = sessionUser()
+    await actions.start()
+  },
+
+  async start() {
+    if (!state.authenticated) return
+    scheduleExpiry()
+    await guarded(loadHistory)
+    stopLive?.()
+    stopLive = api.connectLive({
+      onMessage: handleMessage,
+      onOpen: () => {
+        state.live = true
+        loadHistory().catch(() => {})
+      },
+      onClose: () => {
+        state.live = false
+      },
+    })
+  },
+
+  logout() {
+    stopLive?.()
+    stopLive = null
+    clearTimeout(expiryTimer)
+    api.setSession(null)
+    Object.assign(state, {
+      authenticated: false,
+      user: null,
+      error: null,
+      live: false,
+      status: null,
+      telemetry: [],
+      alerts: [],
+      commands: {},
+    })
+  },
+
+  async sendCommand(target, action, duration_ms = 0) {
+    const res = await guarded(() => api.sendCommand(target, action, duration_ms))
+    state.commands[res.id] = { id: res.id, target, action, status: res.status }
+    return res
+  },
+}
