@@ -1,5 +1,5 @@
 <script setup>
-import { state, actions, isSupervisor } from '../stores/sentinel'
+import { state } from '../stores/sentinel'
 
 const colors = { info: 'var(--muted)', warning: 'var(--warn)', critical: 'var(--bad)' }
 const time = (iso) => new Date(iso).toLocaleTimeString()

@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { state, actions, isSupervisor } from '../stores/sentinel'
+import { state, actions } from '../stores/sentinel'
 
 const online = computed(() => !!state.status?.online)
-const enabled = computed(() => online.value && isSupervisor.value)
+const enabled = computed(() => online.value)
 const last = computed(() => Object.values(state.commands).at(-1))
 const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms).catch(() => {})
 </script>
@@ -90,13 +90,7 @@ const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms)
     </p>
 
     <p
-      v-if="!isSupervisor"
-      class="mt-3 rounded bg-amber-50 p-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200"
-    >
-      Compte en lecture seule : commandes désactivées.
-    </p>
-    <p
-      v-else-if="!online"
+      v-if="!online"
       class="mt-3 rounded bg-amber-50 p-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200"
     >
       Boîtier hors ligne : commandes désactivées.
