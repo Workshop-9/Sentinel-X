@@ -5,8 +5,9 @@ class ConnectionManager:
     def __init__(self):
         self.clients: set[WebSocket] = set()
 
-    async def connect(self, ws: WebSocket):
-        await ws.accept()
+    async def connect(self, ws: WebSocket, accepted: bool = False):
+        if not accepted:
+            await ws.accept()
         self.clients.add(ws)
 
     def disconnect(self, ws: WebSocket):

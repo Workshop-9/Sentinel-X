@@ -1,9 +1,7 @@
 const BASE =
   import.meta.env.VITE_API_URL ||
   `${location.protocol}//${location.hostname}:8000`;
-
-// Un seul boîtier : identifiant fixe, aligné avec DEVICE_ID du backend (.env)
-export const DEVICE_ID = import.meta.env.VITE_DEVICE_ID || "esp8266-01";
+const API_KEY = import.meta.env.VITE_API_KEY || "";
 
 export class ApiError extends Error {
   constructor(status, code, message) {
@@ -22,7 +20,10 @@ async function request(path, { method = "GET", body, params } = {}) {
   }
   const res = await fetch(url, {
     method,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": API_KEY,
+    },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
@@ -41,10 +42,10 @@ export const getStatus = () => request("/api/v1/status");
 export const getTelemetry = (params) =>
   request("/api/v1/telemetry", { params });
 export const getAlerts = (params) => request("/api/v1/alerts", { params });
-export const sendCommand = (target, action, duration_ms = 0) =>
+export const sendCommand = (device_id, target, action, duration_ms = 0) =>
   request("/api/v1/commands", {
     method: "POST",
-    body: { device_id: DEVICE_ID, target, action, duration_ms },
+    body: { device_id, target, action, duration_ms },
   });
 
 export const videoUrl = () => `${BASE}/video/stream`;
@@ -56,7 +57,10 @@ export function connectLive({ onMessage, onOpen, onClose }) {
   let stopped = false;
 
   const open = () => {
-    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}/ws/live`);
+    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}/ws/live`, [
+      "sentinel-x",
+      `api-key.${API_KEY}`,
+    ]);
     ws.onopen = () => {
       delay = 1000;
       onOpen?.();

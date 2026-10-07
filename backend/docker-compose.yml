@@ -1,20 +1,31 @@
 services:
-  postgres:
-    image: postgres:16
-    container_name: sentinel-postgres
-    environment:
-      POSTGRES_USER: sentinel
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: sentinel_x
-    ports:
-      - "5432:5432"
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports: ["8883:8883"]
     volumes:
-      - sentinel_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sentinel -d sentinel_x"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/passwd:/mosquitto/config/passwd:ro
+      - ./mosquitto/acl:/mosquitto/config/acl:ro
+      - ./mosquitto/certs:/mosquitto/certs:ro
+      - mqtt_data:/mosquitto/data
+    security_opt: ["no-new-privileges:true"]
+    networks: [backend]
 
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    volumes: [db_data:/var/lib/postgresql/data]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+    networks: [backend]
+
+networks:
+  backend: { driver: bridge }
 volumes:
-  sentinel_pgdata:
+  mqtt_data:
+  db_data:

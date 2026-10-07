@@ -101,10 +101,21 @@ export const actions = {
   },
 
   async sendCommand(target, action, duration_ms = 0) {
-    const res = await guarded(() =>
-      api.sendCommand(target, action, duration_ms),
-    );
-    state.commands[res.id] = { id: res.id, target, action, status: res.status };
-    return res;
+    return guarded(async () => {
+      const deviceId = state.status?.device_id;
+      if (!deviceId) {
+        throw new Error("Identifiant du boîtier indisponible.");
+      }
+
+      const res = await api.sendCommand(deviceId, target, action, duration_ms);
+      state.commands[res.id] = {
+        id: res.id,
+        device_id: deviceId,
+        target,
+        action,
+        status: res.status,
+      };
+      return res;
+    });
   },
 };

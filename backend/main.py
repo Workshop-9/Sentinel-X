@@ -1,9 +1,13 @@
+import asyncio
 from contextlib import asynccontextmanager
+import os
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import db
+from .mqtt_bridge import mqtt_bridge
+from .security import require_api_key, validate_api_key_config
 from .routes.alerts import router as alerts_router
 from .routes.commands import router as commands_router
 from .routes.status import router as dashboard_router
@@ -13,22 +17,33 @@ from .routes.telemetry import router as telemetry_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    validate_api_key_config()
     db.init_db()
-    yield
-    db.close_db()
+    mqtt_bridge.start(asyncio.get_running_loop())
+    try:
+        yield
+    finally:
+        mqtt_bridge.stop()
+        db.close_db()
 
 
 app = FastAPI(title="SENTINEL-X API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        origin.strip()
+        for origin in os.getenv(
+            "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+        ).split(",")
+        if origin.strip()
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(alerts_router)
-app.include_router(telemetry_router)
-app.include_router(dashboard_router)
-app.include_router(commands_router)
+app.include_router(alerts_router, dependencies=[Depends(require_api_key)])
+app.include_router(telemetry_router, dependencies=[Depends(require_api_key)])
+app.include_router(dashboard_router, dependencies=[Depends(require_api_key)])
+app.include_router(commands_router, dependencies=[Depends(require_api_key)])
 app.include_router(realtime_router)

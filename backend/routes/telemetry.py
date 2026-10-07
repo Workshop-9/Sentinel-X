@@ -15,14 +15,16 @@ router = APIRouter(tags=["Telemetry"])
 async def post_telemetry(telemetry: TelemetryIn):
     with db.get_conn() as conn:
         conn.execute(
-            "INSERT INTO telemetry(device_id, ts, temperature, gas, humidity) "
-            "VALUES(%s,%s,%s,%s,%s)",
+            "INSERT INTO telemetry(device_id, ts, temperature, gas, humidity, motion, label) "
+            "VALUES(%s,%s,%s,%s,%s,%s,%s)",
             (
                 telemetry.device_id,
                 telemetry.timestamp,
                 telemetry.temperature,
                 telemetry.gas,
                 telemetry.humidity,
+                telemetry.motion,
+                telemetry.label,
             ),
         )
         db.touch_device(conn, telemetry.device_id)
@@ -36,7 +38,9 @@ async def post_telemetry(telemetry: TelemetryIn):
                     "temperature_c": telemetry.temperature,
                     "gas_ppm": telemetry.gas,
                     "humidity_pct": telemetry.humidity,
+                    "motion": telemetry.motion,
                 },
+                "label": telemetry.label,
             },
         }
     )
@@ -72,7 +76,9 @@ def get_telemetry(
                     "temperature_c": row["temperature"],
                     "gas_ppm": row["gas"],
                     "humidity_pct": row["humidity"],
+                    "motion": row["motion"],
                 },
+                "label": row["label"],
             }
             for row in reversed(rows)
         ]

@@ -36,9 +36,22 @@ Créez `backend/.env` avec la même configuration que le service PostgreSQL déf
 
 ```dotenv
 DATABASE_URL=postgresql://sentinel:admin@localhost:5432/sentinel_x
+API_KEY=remplacez-par-une-cle-aleatoire-de-32-caracteres-minimum
+MQTT_BROKER_HOST=192.168.137.1
+MQTT_BROKER_PORT=8883
+# MQTT_TLS_CA_CERT=C:/chemin/vers/ca.crt
+# MQTT_USERNAME=identifiant-du-backend
+# MQTT_PASSWORD=mot-de-passe-du-backend
+# MQTT_CLIENT_CERT=C:/chemin/vers/client.crt
+# MQTT_CLIENT_KEY=C:/chemin/vers/client.key
 ```
 
 Ces identifiants sont réservés au développement local. Changez-les avant tout déploiement.
+Générez une clé avec `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
+L'API refuse de démarrer si la clé est absente, trop courte ou invalide.
+Le backend se connecte à Mosquitto en TLS et s'abonne à `sentinel/+/telemetry`.
+La validation du certificat TLS reste activée; configurez `MQTT_TLS_CA_CERT` si le broker utilise une autorité privée. Si Mosquitto exige une authentification, configurez aussi `MQTT_USERNAME` et `MQTT_PASSWORD`; pour le TLS mutuel, renseignez ensemble `MQTT_CLIENT_CERT` et `MQTT_CLIENT_KEY`.
+Les commandes ne sont pas encore publiées par MQTT : le mécanisme actuel de commandes reste inchangé.
 
 Démarrez PostgreSQL :
 
@@ -84,6 +97,7 @@ Par défaut, le frontend cherche l’API sur le port `8000` de la même machine.
 
 ```dotenv
 VITE_API_URL=http://localhost:8000
+VITE_API_KEY=la-meme-cle-que-dans-backend/.env
 ```
 
 Pour afficher les données simulées du tableau de bord, ajoutez `VITE_DEMO_MODE=true` à `frontend/.env.local`, puis redémarrez Vite.
@@ -144,8 +158,9 @@ docker compose -f backend/docker-compose.yml down
 
 Le volume Docker conserve les données PostgreSQL entre les démarrages.
 
-## Limites et sécurité
+## Sécurité
 
 - Les routes vidéo `/video` et `/video/stream` ne sont pas implémentées et répondent `501`.
-- L’API n’a pas de mécanisme d’authentification et autorise toutes les origines CORS. Ne l’exposez pas directement sur un réseau public.
+- Toutes les routes API REST et les WebSockets exigent `API_KEY`. Configurez `CORS_ORIGINS` dans `backend/.env` avec les origines frontend autorisées, séparées par des virgules; les origines locales Vite sont les valeurs par défaut.
+- `VITE_API_KEY` est incorporée au bundle livré par le navigateur. Cette authentification convient à un environnement local ou contrôlé, mais ne protège pas un frontend public contre l'extraction de la clé. Pour une exposition Internet, placez l'API derrière un proxy avec une authentification adaptée et utilisez des identifiants distincts par appareil.
 - Les identifiants de l’exemple Docker sont uniquement adaptés à un environnement local.

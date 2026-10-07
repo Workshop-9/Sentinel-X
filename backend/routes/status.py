@@ -14,14 +14,14 @@ def get_status(offline_after_s: int = Query(30, ge=1, le=3600)):
         device = conn.execute(
             "SELECT * FROM devices ORDER BY last_seen DESC LIMIT 1"
         ).fetchone()
-        latest_event = conn.execute(
-            "SELECT state FROM events ORDER BY ts DESC LIMIT 1"
+        latest = conn.execute(
+            "SELECT label FROM telemetry ORDER BY id DESC LIMIT 1"
         ).fetchone()
 
-    state_by_backend = {"OK": "NORMAL", "WARNING": "WARNING", "CRITICAL": "ALERT"}
+    state_by_label = {"normal": "NORMAL", "warning": "WARNING", "critical": "ALERT"}
     return {
         "device_id": device["device_id"] if device else None,
-        "state": state_by_backend.get(latest_event["state"], "NORMAL") if latest_event else "NORMAL",
+        "state": state_by_label.get(latest["label"], "NORMAL") if latest else "NORMAL",
         "online": bool(device and now - device["last_seen"] <= offline_after_s),
         "rssi_dbm": None,
     }

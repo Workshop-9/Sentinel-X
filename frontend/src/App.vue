@@ -6,16 +6,9 @@ import StatusPanel from './components/StatusPanel.vue'
 import LiveChart from './components/LiveChart.vue'
 import AlertList from './components/AlertList.vue'
 import CommandPanel from './components/ControlPanel.vue'
-import { dashboardMock } from './mocks/dashboard.js'
-
-const demoMode = import.meta.env.VITE_DEMO_MODE === 'true'
-
-if(demoMode){
-  Object.assign(state, dashboardMock)
-}
 
 onMounted(() => {
-  if (!demoMode) actions.start().catch(() => {})
+  actions.start().catch(() => {})
 })
 </script>
 
