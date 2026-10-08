@@ -19,8 +19,8 @@ from .routes.telemetry import router as telemetry_router
 async def lifespan(app: FastAPI):
     validate_api_key_config()
     db.init_db()
-    mqtt_bridge.start(asyncio.get_running_loop())
     try:
+        mqtt_bridge.start(asyncio.get_running_loop())
         yield
     finally:
         mqtt_bridge.stop()

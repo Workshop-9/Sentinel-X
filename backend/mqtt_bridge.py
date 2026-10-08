@@ -18,6 +18,7 @@ load_dotenv(Path(__file__).with_name(".env"))
 logger = logging.getLogger(__name__)
 TELEMETRY_TOPIC = "sentinel/+/telemetry"
 DEVICE_TOPIC = re.compile(r"^sentinel/([A-Za-z0-9_.-]+)/telemetry$")
+DEVICE_ID = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
 class MqttBridge:
@@ -65,6 +66,19 @@ class MqttBridge:
             self.client.disconnect()
             self.client.loop_stop()
             self.client = None
+
+    def publish_command(self, device_id: str, payload: dict) -> bool:
+        # Empêche l'injection de topic (+, #, /) via device_id
+        if not DEVICE_ID.fullmatch(device_id):
+            return False
+        if self.client is None or not self.client.is_connected():
+            return False
+        info = self.client.publish(
+            f"sentinel/{device_id}/command",
+            json.dumps(payload),
+            qos=1,
+        )
+        return info.rc == mqtt.MQTT_ERR_SUCCESS
 
     @staticmethod
     def _on_connect(client, userdata, flags, reason_code, properties):
