@@ -12,6 +12,7 @@ from .routes.commands import router as commands_router
 from .routes.status import router as dashboard_router
 from .routes.realtime import router as realtime_router
 from .routes.telemetry import router as telemetry_router
+from .video import camera_stream
 
 
 @asynccontextmanager
@@ -21,6 +22,7 @@ async def lifespan(app: FastAPI):
         mqtt_bridge.start(asyncio.get_running_loop())
         yield
     finally:
+        camera_stream.stop()
         mqtt_bridge.stop()
         db.close_db()
 

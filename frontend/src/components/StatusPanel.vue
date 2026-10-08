@@ -16,8 +16,6 @@ const val = (v, unit) => (v === undefined || v === null ? '–' : `${v} ${unit}`
       <div><small>Humidité</small><b>{{ val(latest?.sensors.humidity_pct, '%') }}</b></div>
       <div><small>Gaz</small><b>{{ val(latest?.sensors.gas_ppm, 'ppm') }}</b></div>
       <div><small>Mouvement</small><b>{{ latest?.sensors.motion == null ? '–' : latest.sensors.motion ? 'Détecté' : 'Aucun' }}</b></div>
-      <div><small>Classification</small><b>{{ latest?.label ?? '–' }}</b></div>
-      <div><small>Signal WiFi</small><b>{{ val(state.status?.rssi_dbm, 'dBm') }}</b></div>
     </div>
   </section>
 </template>

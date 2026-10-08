@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { state, activeAlerts, actions } from './stores/sentinel'
 import { videoUrl } from './services/api'
 import StatusPanel from './components/StatusPanel.vue'
@@ -10,6 +10,8 @@ import CommandPanel from './components/ControlPanel.vue'
 onMounted(() => {
   actions.start().catch(console.error)
 })
+
+const videoError = ref(false)
 </script>
 
 <template>
@@ -56,11 +58,18 @@ onMounted(() => {
 
     <section class="rounded-lg border border-[#dcdcd6] bg-white p-4 dark:border-[#3a3a36] dark:bg-[#222220]">
       <h2 class="mb-2 text-sm font-semibold">Webcam</h2>
-      <img
-        :src="videoUrl()"
-        alt="Flux webcam"
-        class="aspect-4/3 w-full rounded-lg bg-black object-cover"
-      />
+      <div class="flex aspect-4/3 w-full items-center justify-center overflow-hidden rounded-lg bg-black">
+        <img
+          v-if="!videoError"
+          :src="videoUrl()"
+          alt="Flux webcam"
+          class="h-full w-full object-cover"
+          @error="videoError = true"
+        />
+        <p v-else class="px-4 text-center text-sm text-white">
+          Flux vidéo indisponible. Vérifiez que le backend fonctionne et qu’une webcam est accessible.
+        </p>
+      </div>
     </section>
 
     <CommandPanel

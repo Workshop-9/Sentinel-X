@@ -1,11 +1,16 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import { state, actions } from '../stores/sentinel'
 
 const online = computed(() => !!state.status?.online)
-const enabled = computed(() => online.value)
 const last = computed(() => Object.values(state.commands).at(-1))
 const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms).catch(() => {})
+const selected = reactive({ buzzer: null, led_green: null, led_red: null })
+
+const selectCommand = (target, action, ms = 0) => {
+  selected[target] = action
+  if (online.value) send(target, action, ms)
+}
 </script>
 
 <template>
@@ -20,22 +25,22 @@ const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms)
     <div class="mb-3 grid grid-cols-[5rem_repeat(2,minmax(0,1fr))] items-center gap-2">
       <span class="text-sm font-medium">Buzzer</span>
       <button
-        :disabled="!enabled"
-        class="rounded px-2 py-2 text-xs font-medium text-white
-               bg-rose-600 hover:bg-rose-700
-               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500
-               disabled:cursor-not-allowed disabled:opacity-40"
-        @click="send('buzzer', 'blink', 5000)"
+        class="rounded border border-neutral-300 px-2 py-2 text-xs font-medium
+               hover:bg-neutral-100 dark:border-neutral-600 dark:hover:bg-neutral-800
+               transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+        :class="selected.buzzer === 'blink' ? 'border-rose-600 bg-rose-600 text-white hover:bg-rose-700 dark:border-rose-500' : ''"
+        :aria-pressed="selected.buzzer === 'blink'"
+        @click="selectCommand('buzzer', 'blink', 5000)"
       >
         Alarme 5 s
       </button>
       <button
-        :disabled="!enabled"
         class="rounded border border-neutral-300 px-2 py-2 text-xs font-medium
                hover:bg-neutral-100 dark:border-neutral-600 dark:hover:bg-neutral-800
-               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500
-               disabled:cursor-not-allowed disabled:opacity-40"
-        @click="send('buzzer', 'off')"
+               transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+        :class="selected.buzzer === 'off' ? 'border-rose-600 bg-rose-600 text-white hover:bg-rose-700 dark:border-rose-500' : ''"
+        :aria-pressed="selected.buzzer === 'off'"
+        @click="selectCommand('buzzer', 'off')"
       >
         Arrêt
       </button>
@@ -49,34 +54,40 @@ const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms)
       <span class="truncate text-sm font-medium">LED {{ led }}</span>
 
       <button
-        :disabled="!enabled"
         :class="[
-          'rounded px-2 py-2 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-40',
-          led === 'green' ? 'bg-emerald-600 hover:bg-emerald-700' : '',
-          led === 'orange' ? 'bg-amber-500 hover:bg-amber-600' : '',
-          led === 'red' ? 'bg-rose-600 hover:bg-rose-700' : '',
+          'rounded border px-2 py-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+          selected['led_' + led] === 'on'
+            ? 'border-emerald-700 bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-500'
+            : 'border-neutral-300 bg-transparent hover:bg-neutral-100 focus-visible:ring-emerald-500 dark:border-neutral-600 dark:hover:bg-neutral-800',
         ]"
-        @click="send('led_' + led, 'on')"
+        :aria-pressed="selected['led_' + led] === 'on'"
+        @click="selectCommand('led_' + led, 'on')"
       >
         On
       </button>
 
       <button
-        :disabled="!enabled"
         class="rounded border border-neutral-300 px-2 py-2 text-xs font-medium
                hover:bg-neutral-100 dark:border-neutral-600 dark:hover:bg-neutral-800
-               disabled:cursor-not-allowed disabled:opacity-40"
-        @click="send('led_' + led, 'blink')"
+               transition-colors focus-visible:outline-none focus-visible:ring-2"
+        :class="selected['led_' + led] === 'blink'
+          ? (led === 'green'
+              ? 'border-emerald-500 bg-emerald-100 text-emerald-900 hover:bg-emerald-200 focus-visible:ring-emerald-500 dark:border-emerald-700 dark:bg-emerald-900 dark:text-emerald-100'
+              : 'border-rose-500 bg-rose-100 text-rose-900 hover:bg-rose-200 focus-visible:ring-rose-500 dark:border-rose-700 dark:bg-rose-900 dark:text-rose-100')
+          : 'focus-visible:ring-neutral-400'"
+        :aria-pressed="selected['led_' + led] === 'blink'"
+        @click="selectCommand('led_' + led, 'blink')"
       >
         Clignote
       </button>
 
       <button
-        :disabled="!enabled"
         class="rounded border border-neutral-300 px-2 py-2 text-xs font-medium
                hover:bg-neutral-100 dark:border-neutral-600 dark:hover:bg-neutral-800
-               disabled:cursor-not-allowed disabled:opacity-40"
-        @click="send('led_' + led, 'off')"
+               transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+        :class="selected['led_' + led] === 'off' ? 'border-rose-600 bg-rose-600 text-white hover:bg-rose-700 dark:border-rose-500' : ''"
+        :aria-pressed="selected['led_' + led] === 'off'"
+        @click="selectCommand('led_' + led, 'off')"
       >
         Off
       </button>
@@ -93,7 +104,7 @@ const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms)
       v-if="!online"
       class="mt-3 rounded bg-amber-50 p-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200"
     >
-      Boîtier hors ligne : commandes désactivées.
+      Boîtier hors ligne : aperçu local uniquement, commandes non transmises.
     </p>
   </section>
 </template>
