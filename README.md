@@ -9,7 +9,7 @@ SENTINEL-X est un prototype de supervision pour un boîtier de capteurs connect�
 - PostgreSQL pour conserver télémétrie, événements, commandes et dernière activité des appareils. Les tables et index sont initialisés au démarrage de l’API.
 - WebSocket (`/ws/live`) pour diffuser télémétrie, alertes et mises à jour de commandes.
 - Pont MQTT TLS : réception des mesures sur `sentinel/+/telemetry` et publication des commandes vers `sentinel/<device_id>/cmd`.
-- Flux webcam USB en MJPEG (`/video/stream` et `/video`), fourni par OpenCV et affiché dans le tableau de bord.
+- Flux webcam annoté par l’IA en MJPEG, relayé par l’API sur `/video/stream` et `/video`.
 - Firmware ESP8266 (DHT22, capteur de gaz analogique, PIR et écran OLED), avec commande du buzzer et des LED verte et rouge.
 
 Sans données, les valeurs du panneau d’état restent à « – » et le graphique ne contient pas de courbes. Les boutons de commande restent utilisables en aperçu : hors ligne, le clic change uniquement leur apparence locale et aucune commande n’est transmise. En ligne, les boutons envoient les commandes à l’API. Pour repérer l’action sélectionnée, « On » est vert, « Off » est rouge, « Clignote » reprend la couleur de la LED, et les commandes du buzzer deviennent rouges lorsqu’elles sont sélectionnées.
@@ -19,10 +19,11 @@ Sans données, les valeurs du panneau d’état restent à « – » et le graph
 | Chemin | Rôle |
 | --- | --- |
 | `backend/main.py` | Application FastAPI et démarrage/arrêt du pont MQTT et de PostgreSQL. |
-| `backend/routes/` | Routes REST pour l’état, la télémétrie, les alertes/événements et les commandes; WebSocket et routes vidéo. |
+| `backend/routes/` | Routes REST pour l’état, la télémétrie, les alertes/événements et les commandes; WebSocket et vidéo. |
 | `backend/models.py` | Validation des formats de télémétrie, d’alerte et de commande. |
 | `backend/db.py` | Pool PostgreSQL, initialisation du schéma et gestion des appareils. |
 | `backend/mqtt_bridge.py` | Abonnement aux mesures MQTT et publication des commandes MQTT en TLS. |
+| `backend/video.py` | Relais du flux MJPEG du service de vision IA vers le tableau de bord. |
 | `backend/docker-compose.yml` | Services Mosquitto, PostgreSQL, API et frontend conteneurisé. |
 | `frontend/src/` | Application Vue, composants, état partagé et client API/WebSocket. |
 | `firmware/sketch_oct6c/` | Programme de l’ESP8266 et modèle de configuration Wi-Fi/MQTT. |
@@ -31,7 +32,7 @@ Sans données, les valeurs du panneau d’état restent à « – » et le graph
 ## Prérequis
 
 - Python 3.12 recommandé (également utilisé par l’image Docker du backend).
-- Une webcam USB accessible depuis le processus backend pour utiliser le flux vidéo.
+- Une webcam accessible depuis le processus de vision IA pour utiliser le flux vidéo.
 - Node.js 20+ et npm pour le frontend.
 - PostgreSQL 16, localement ou via Docker.
 - Un broker MQTT accessible en TLS pour recevoir les mesures et piloter le boîtier.
@@ -47,7 +48,9 @@ Créez `backend/.env` avec l’URL PostgreSQL et, si nécessaire, la configurati
 DATABASE_URL=postgresql://<utilisateur>:<mot-de-passe>@localhost:5432/sentinel_x
 MQTT_BROKER_HOST=192.168.137.1
 MQTT_BROKER_PORT=8883
-CAMERA_INDEX=0
+SENTINEL_AI_VIDEO_URL=http://127.0.0.1:8081/video
+# Facultatif : doit correspondre à SENTINEL_STREAM_TOKEN dans ai/.env
+# SENTINEL_AI_VIDEO_TOKEN=jeton-video-partage
 # Autorité de certification privée, si nécessaire :
 # MQTT_TLS_CA_CERT=C:/chemin/vers/ca.crt
 # Authentification MQTT facultative :
@@ -72,7 +75,9 @@ python -m uvicorn backend.main:app --reload
 
 L’API répond sur `http://127.0.0.1:8000`; Swagger est disponible à `http://127.0.0.1:8000/docs`. La connexion à un broker MQTT est lancée au démarrage; elle est nécessaire pour les échanges avec le boîtier, mais les mesures peuvent aussi être envoyées directement à l’API.
 
-Le flux vidéo s’ouvre à la première requête et réutilise une capture webcam pour tous les clients. `CAMERA_INDEX` sélectionne la caméra OpenCV (défaut `0`; essayez `1` si plusieurs caméras sont connectées). Si aucune caméra ne peut être ouverte, l’API reste disponible et `GET /video/stream` répond `503 Service Unavailable` avec le détail de l’erreur. La webcam doit être accessible par le processus qui exécute l’API.
+Le backend ne capture pas lui-même la webcam : il relaie le flux annoté produit par le processus de vision IA. Pour l’utiliser, démarrez également l’IA depuis le dossier `ai` avec `python -m sentinel_ai vision --headless`. Le flux IA écoute par défaut sur `http://127.0.0.1:8081/video`; modifiez `SENTINEL_AI_VIDEO_URL` si son adresse diffère. L’index de la webcam se configure dans `ai/config/settings.toml` (`[vision].camera_index`). Sans service IA joignable, l’API reste disponible et `/video/stream` répond `503`.
+
+Pour protéger le flux, définissez `SENTINEL_STREAM_TOKEN` dans `ai/.env` et la même valeur dans `SENTINEL_AI_VIDEO_TOKEN` de `backend/.env`. L’IA vérifie alors le jeton transmis par le backend dans l’en-tête Bearer.
 
 ### 2. Installer et lancer le frontend
 
@@ -127,7 +132,7 @@ Toutes les routes REST sont préfixées par `/api/v1`, sauf `/health`. Les param
 | `POST` | `/api/v1/commands` | Enregistre et tente de publier une commande MQTT. |
 | `GET` | `/api/v1/commands/pending?device_id=SX-001` | Récupère les commandes en attente pour l’appareil. Le firmware fourni utilise MQTT et ne poll pas actuellement cette route. |
 | `WS` | `/ws/live` (alias `/ws`) | Flux des messages `telemetry`, `alert` et `command`. |
-| `GET` | `/video/stream` (alias `/video`) | Flux webcam MJPEG (`multipart/x-mixed-replace`); répond `503` si aucune webcam utilisable n’est disponible. |
+| `GET` | `/video/stream` (alias `/video`) | Relais du flux MJPEG annoté par la vision IA; répond `503` si le service IA est indisponible et `502` en cas de réponse incompatible. |
 
 Exemple de mesure :
 
@@ -175,7 +180,7 @@ Les cibles disponibles sont `buzzer`, `led_green` et `led_red`; les actions sont
 
 - Le statut en ligne est déterminé à partir de l’activité la plus récente enregistrée pour un appareil; le tableau de bord rafraîchit ce statut périodiquement.
 - Les alertes proviennent des événements persistés dans PostgreSQL. Le firmware présenté publie la télémétrie, mais ne génère pas lui-même de requêtes d’alerte HTTP.
-- Le flux vidéo utilise la webcam accessible au backend. En exécution dans Docker, la webcam de l’hôte doit être explicitement passée au conteneur; sous Linux, cela nécessite généralement un mapping de périphérique tel que `/dev/video0`. Docker Desktop sous Windows ne transmet pas automatiquement les webcams USB aux conteneurs Linux; lancez l’API directement sur Windows ou configurez une source vidéo accessible depuis le conteneur.
+- Le processus IA doit rester lancé pour que la vidéo soit disponible; c’est lui qui ouvre la webcam, exécute YOLO et sert les images annotées. En exécution dans Docker, configurez `SENTINEL_AI_VIDEO_URL` pour une adresse joignable depuis le conteneur; le service IA doit aussi écouter sur une interface réseau accessible et être protégé par un jeton et un pare-feu.
 - Le backend actuel n’implémente pas d’authentification API. CORS autorise toutes les origines dans `backend/main.py`. Ne publiez pas l’API telle quelle sur Internet; limitez son accès au réseau de confiance ou ajoutez une authentification et une politique CORS adaptées avant tout déploiement.
 - La configuration du broker utilise TLS avec validation du certificat. N’activez pas de contournement de validation TLS en production et protégez les mots de passe/certificats.
 
