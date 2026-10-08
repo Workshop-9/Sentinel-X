@@ -57,7 +57,7 @@ export function connectLive({ onMessage, onOpen, onClose }) {
   let stopped = false;
 
   const open = () => {
-    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}/ws/live`, [
+    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}ws/live`, [
       "sentinel-x",
       `api-key.${API_KEY}`,
     ]);
