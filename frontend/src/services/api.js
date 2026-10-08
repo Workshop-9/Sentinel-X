@@ -2,7 +2,10 @@ const BASE = (
   import.meta.env.VITE_API_URL ||
   `${location.protocol}//${location.hostname}:8000`
 ).replace(/\/+$/, "");
-const API_KEY = import.meta.env.VITE_API_KEY || "";
+console.log("Configuration API :", {
+  origineFrontend: location.origin,
+  urlApi: BASE,
+});
 
 export class ApiError extends Error {
   constructor(status, code, message) {
@@ -21,10 +24,7 @@ async function request(path, { method = "GET", body, params } = {}) {
   }
   const res = await fetch(url, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-Key": API_KEY,
-    },
+    headers: { "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
@@ -58,10 +58,7 @@ export function connectLive({ onMessage, onOpen, onClose }) {
   let stopped = false;
 
   const open = () => {
-    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}/ws/live`, [
-      "sentinel-x",
-      `api-key.${API_KEY}`,
-    ]);
+    ws = new WebSocket(`${BASE.replace(/^http/, "ws")}/ws/live`);
     ws.onopen = () => {
       delay = 1000;
       onOpen?.();
