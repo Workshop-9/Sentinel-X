@@ -1,0 +1,7 @@
+# Mots de passe Wi-Fi et MQTT : jamais sur Git
+secrets.h
+
+# Fichiers de compilation
+build/
+*.bin
+*.elf
