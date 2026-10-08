@@ -73,27 +73,114 @@ PubSubClient mqtt(net);
 bool oledOK = false;
 bool alarmOn = false;
 unsigned long lastSend = 0;
+unsigned long alarmUntil = 0;
+unsigned long greenLedUntil = 0;
+unsigned long redLedUntil = 0;
+bool greenLedBlinking = false;
+bool redLedBlinking = false;
+bool greenLedOn = true;
+bool redLedOn = false;
 
 // Alarme : LED rouge ON, LED verte OFF (le son est géré dans loop)
 void setAlarm(bool on) {
   alarmOn = on;
-  digitalWrite(LED_ROUGE, on ? HIGH : LOW);
-  digitalWrite(LED_VERTE, on ? LOW  : HIGH);
+  alarmUntil = 0;
+  greenLedBlinking = false;
+  redLedBlinking = false;
+  greenLedUntil = 0;
+  redLedUntil = 0;
+  greenLedOn = !on;
+  redLedOn = on;
+  digitalWrite(LED_ROUGE, redLedOn ? HIGH : LOW);
+  digitalWrite(LED_VERTE, greenLedOn ? HIGH : LOW);
   if (!on) {
     noTone(BUZZER_PIN);
     digitalWrite(BUZZER_PIN, LOW);
   }
 }
 
-// Reçoit les commandes (flux 7)
+void applyLedCommand(bool green, const char* action, unsigned long durationMs) {
+  bool& blinking = green ? greenLedBlinking : redLedBlinking;
+  bool& isOn = green ? greenLedOn : redLedOn;
+  unsigned long& endsAt = green ? greenLedUntil : redLedUntil;
+  const uint8_t pin = green ? LED_VERTE : LED_ROUGE;
+
+  if (strcmp(action, "on") == 0) {
+    blinking = false;
+    isOn = true;
+  } else if (strcmp(action, "off") == 0) {
+    blinking = false;
+    isOn = false;
+  } else if (strcmp(action, "blink") == 0) {
+    blinking = true;
+    isOn = true;
+  } else {
+    return;
+  }
+
+  endsAt = durationMs ? millis() + durationMs : 0;
+  digitalWrite(pin, isOn ? HIGH : LOW);
+}
+
+void updateCommandOutputs() {
+  const unsigned long now = millis();
+
+  if (alarmUntil && (long)(now - alarmUntil) >= 0) setAlarm(false);
+  if (greenLedUntil && (long)(now - greenLedUntil) >= 0) {
+    greenLedUntil = 0;
+    greenLedBlinking = false;
+    greenLedOn = false;
+    digitalWrite(LED_VERTE, LOW);
+  }
+  if (redLedUntil && (long)(now - redLedUntil) >= 0) {
+    redLedUntil = 0;
+    redLedBlinking = false;
+    redLedOn = false;
+    digitalWrite(LED_ROUGE, LOW);
+  }
+
+  static unsigned long lastLedBlink = 0;
+  if (now - lastLedBlink >= 300) {
+    lastLedBlink = now;
+    if (greenLedBlinking) {
+      greenLedOn = !greenLedOn;
+      digitalWrite(LED_VERTE, greenLedOn ? HIGH : LOW);
+    }
+    if (redLedBlinking) {
+      redLedOn = !redLedOn;
+      digitalWrite(LED_ROUGE, redLedOn ? HIGH : LOW);
+    }
+  }
+}
+
+// Reçoit les commandes publiées sur sentinel/<device_id>/cmd.
 void onMessage(char* topic, byte* payload, unsigned int len) {
   JsonDocument doc;
   if (deserializeJson(doc, payload, len)) return;
-  const char* alarm = doc["alarm"];
-  if (alarm) {
-    setAlarm(strcmp(alarm, "on") == 0);
-    Serial.printf(">>> Commande recue : alarm=%s\n", alarm);
+
+  const char* target = doc["target"] | "";
+  const char* action = doc["action"] | "";
+  const unsigned long durationMs = doc["duration_ms"] | 0UL;
+  if (!target[0] || !action[0]) return;
+
+  if (strcmp(target, "buzzer") == 0) {
+    if (strcmp(action, "off") == 0) {
+      setAlarm(false);
+    } else if (strcmp(action, "on") == 0 || strcmp(action, "blink") == 0) {
+      setAlarm(true);
+      alarmUntil = durationMs ? millis() + durationMs : 0;
+    } else {
+      return;
+    }
+  } else if (strcmp(target, "led_green") == 0) {
+    applyLedCommand(true, action, durationMs);
+  } else if (strcmp(target, "led_red") == 0) {
+    applyLedCommand(false, action, durationMs);
+  } else {
+    return;
   }
+
+  Serial.printf(">>> Commande recue : %s/%s (%lu ms)\n", target, action, durationMs);
 }
 
 void oledMsg(const char* l1, const char* l2) {
@@ -187,6 +274,7 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED) connectWiFi();
   if (!mqtt.connected()) connectMQTT();
   mqtt.loop();
+  updateCommandOutputs();
 
   // Sirène : bip-bip tant que l'alarme est active
   static unsigned long lastBeep = 0;

@@ -42,7 +42,7 @@ const send = (target, action, ms = 0) => actions.sendCommand(target, action, ms)
     </div>
 
     <div
-      v-for="led in ['green', 'orange', 'red']"
+      v-for="led in ['green', 'red']"
       :key="led"
       class="mb-3 grid grid-cols-[5rem_repeat(3,minmax(0,1fr))] items-center gap-2 last:mb-0"
     >

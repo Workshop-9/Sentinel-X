@@ -50,6 +50,6 @@ class TelemetryIn(BaseModel):
 
 class CommandIn(BaseModel):
     device_id: str = Field(min_length=1, max_length=64)
-    target: Literal["buzzer", "led_green", "led_orange", "led_red"]
+    target: Literal["buzzer", "led_green", "led_red"]
     action: Literal["on", "off", "blink"]
     duration_ms: Optional[int] = Field(default=None, ge=0, le=60000)

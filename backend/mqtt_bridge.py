@@ -74,7 +74,7 @@ class MqttBridge:
         if self.client is None or not self.client.is_connected():
             return False
         info = self.client.publish(
-            f"sentinel/{device_id}/command",
+            f"sentinel/{device_id}/cmd",
             json.dumps(payload),
             qos=1,
         )
