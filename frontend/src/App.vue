@@ -8,7 +8,7 @@ import AlertList from './components/AlertList.vue'
 import CommandPanel from './components/ControlPanel.vue'
 
 onMounted(() => {
-  actions.start().catch(() => {})
+  actions.start().catch(console.error)
 })
 </script>
 
