@@ -1,0 +1,30 @@
+# --- Secrets : jamais dans Git -------------------------------------------
+.env
+certs/
+*.key
+*.pem
+*.crt
+*.p12
+
+# --- Environnements et caches ---------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# --- Poids de modèles tiers (téléchargeables, 6 Mo) -----------------------
+*.pt
+*.onnx
+
+# --- Données personnelles (photos d'intrus) et journaux --------------------
+captures/
+sentinel_captures/
+logs/
+*.log
+
+# --- Divers -----------------------------------------------------------------
+.write_probe_*
+.DS_Store
+Thumbs.db

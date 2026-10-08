@@ -1,0 +1,29 @@
+{
+  "files": [
+    "telemetry.csv"
+  ],
+  "rows_read": 1126,
+  "duplicates_removed": 1,
+  "invalid_removed": 0,
+  "rows": 1125,
+  "devices": [
+    "SX-001"
+  ],
+  "start": "2026-10-07 10:15:29",
+  "end": "2026-10-07 10:56:35",
+  "labels": {
+    "normal": 987,
+    "anomalie": 100,
+    "transition": 38
+  },
+  "annotations": [
+    {
+      "start": "2026-10-07 10:48:25",
+      "end": "2026-10-07 10:49:39",
+      "label": "transition",
+      "rows": 38,
+      "reason": "Manipulation du boîtier avant la session anomalie : humidité 52.8 -> 61.6 % en 4 s puis température +2 °C (étiquetée normal par erreur)"
+    }
+  ],
+  "fingerprint": "8eb47cd2c8d825d5"
+}

@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-08T11:24:53",
+  "model": "yolov8n.pt",
+  "resolution": "640x480",
+  "source": "images d'exemple ultralytics",
+  "frames": 100,
+  "mean_ms": 50.7,
+  "p50_ms": 49.1,
+  "p95_ms": 57.2,
+  "max_ms": 100.5,
+  "fps": 19.7,
+  "budget_ms": 100.0,
+  "within_budget": true,
+  "persons_detected_per_frame": 3.0,
+  "cpu": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+  "torch": "2.14.1+cpu"
+}

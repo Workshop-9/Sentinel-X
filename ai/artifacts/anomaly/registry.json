@@ -1,0 +1,17 @@
+{
+  "production": "iforest-20261008-112651",
+  "models": {
+    "iforest-20261008-112651": {
+      "created": "2026-10-08T11:26:51",
+      "algorithm": "isolation_forest",
+      "path": "iforest-20261008-112651/model.joblib",
+      "sha256": "ec8b6b2c39abb0f70ae75023f3a01e39764ca9570d5500ab568880bcda2730b0",
+      "summary": {
+        "test_fpr": 0.05128205128205128,
+        "anomaly_recall": 1.0,
+        "scenario_detection_rate": 1.0,
+        "gates_passed": true
+      }
+    }
+  }
+}

@@ -1,0 +1,251 @@
+time,temp,hum,gas,score,level,alarm_triggered,causes,label
+2026-10-07 10:44:41,24.2,53.0,49,0.14658288299655228,normal,False,,normal
+2026-10-07 10:44:43,24.2,52.9,50,0.027706734182376194,normal,False,,normal
+2026-10-07 10:44:45,24.2,52.9,50,0.10765139577731132,normal,False,,normal
+2026-10-07 10:44:47,24.2,52.9,50,0.08999521235214683,normal,False,,normal
+2026-10-07 10:44:49,24.2,53.1,50,0.10765139577731132,normal,False,,normal
+2026-10-07 10:44:52,24.2,53.2,50,0.10765139577731132,normal,False,,normal
+2026-10-07 10:44:53,24.2,53.3,50,0.09351377462306697,normal,False,,normal
+2026-10-07 10:44:55,24.2,53.2,49,0.10765139577731132,normal,False,,normal
+2026-10-07 10:44:57,24.2,53.1,49,0.10765139577731132,normal,False,,normal
+2026-10-07 10:44:59,24.2,53.0,50,0.10765139577731132,normal,False,,normal
+2026-10-07 10:45:01,24.2,53.1,50,0.10765139577731132,normal,False,,normal
+2026-10-07 10:45:03,24.2,53.3,50,0.09349669796228048,normal,False,,normal
+2026-10-07 10:45:05,24.2,53.4,50,0.08117544966315797,normal,False,,normal
+2026-10-07 10:45:07,24.3,53.4,50,0.03747607370723334,normal,False,,normal
+2026-10-07 10:45:09,24.2,53.4,49,0.08143484460454228,normal,False,,normal
+2026-10-07 10:45:11,24.2,53.4,49,0.08156412938336637,normal,False,,normal
+2026-10-07 10:45:13,24.3,53.3,49,0.05515610164811598,normal,False,,normal
+2026-10-07 10:45:15,24.2,53.3,50,0.08331255904918251,normal,False,,normal
+2026-10-07 10:45:17,24.2,53.2,50,0.09720136801670895,normal,False,,normal
+2026-10-07 10:45:19,24.3,53.3,50,0.0722713186741655,normal,False,,normal
+2026-10-07 10:45:21,24.2,53.2,50,0.10626620965023072,normal,False,,normal
+2026-10-07 10:45:23,24.2,53.2,50,0.10626620965023072,normal,False,,normal
+2026-10-07 10:45:26,24.2,53.3,50,0.09464470314518268,normal,False,,normal
+2026-10-07 10:45:27,24.2,53.3,50,0.09474200688671557,normal,False,,normal
+2026-10-07 10:45:29,24.3,53.3,49,0.06411434025912828,normal,False,,normal
+2026-10-07 10:45:31,24.3,53.3,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:45:33,24.2,53.4,49,0.08230169058009064,normal,False,,normal
+2026-10-07 10:45:35,24.2,53.2,49,0.10765139577731132,normal,False,,normal
+2026-10-07 10:45:37,24.2,53.2,49,0.06960135866125912,normal,False,,normal
+2026-10-07 10:45:39,24.3,53.2,42,-0.0016229714176306115,suspect,False,gaz sous la normale,normal
+2026-10-07 10:45:41,24.2,53.1,49,0.10612118302528846,normal,False,,normal
+2026-10-07 10:45:43,24.3,53.1,49,0.10517563554529631,normal,False,,normal
+2026-10-07 10:45:45,24.3,53.0,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:45:47,24.3,53.0,42,-0.00855320474136649,suspect,False,gaz sous la normale,normal
+2026-10-07 10:45:49,24.3,53.2,50,0.1057251323405806,normal,False,,normal
+2026-10-07 10:45:51,24.3,53.2,42,-0.02121736560328362,suspect,False,gaz sous la normale,normal
+2026-10-07 10:45:53,24.3,53.2,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:45:55,24.3,53.2,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:45:57,24.3,53.1,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:46:00,24.3,53.1,49,0.09367188332861208,normal,False,,normal
+2026-10-07 10:46:01,24.3,53.2,49,0.09367188332861208,normal,False,,normal
+2026-10-07 10:46:03,24.3,53.1,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:46:05,24.3,53.0,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:46:07,24.3,52.9,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:46:09,24.3,52.9,42,0.043132270244436444,normal,False,,normal
+2026-10-07 10:46:11,24.3,52.9,49,0.0722713186741655,normal,False,,normal
+2026-10-07 10:46:13,24.3,52.8,49,0.09367188332861208,normal,False,,normal
+2026-10-07 10:46:15,24.3,52.9,49,0.09367188332861208,normal,False,,normal
+2026-10-07 10:46:17,24.3,52.8,49,0.05353508697933209,normal,False,,normal
+2026-10-07 10:46:19,24.3,52.6,49,0.06778651947305481,normal,False,,normal
+2026-10-07 10:46:21,24.3,52.7,49,0.05353508697933209,normal,False,,normal
+2026-10-07 10:46:23,24.3,52.7,49,0.07771133139114852,normal,False,,normal
+2026-10-07 10:46:26,24.3,52.6,49,0.06778651947305481,normal,False,,normal
+2026-10-07 10:46:27,24.3,52.5,50,0.06778651947305481,normal,False,,normal
+2026-10-07 10:46:29,24.3,52.4,49,0.05945902638590906,normal,False,,normal
+2026-10-07 10:46:31,24.3,52.5,49,0.05945902638590906,normal,False,,normal
+2026-10-07 10:46:33,24.3,52.4,49,0.05945902638590906,normal,False,,normal
+2026-10-07 10:46:35,24.3,52.6,49,0.08999521235214683,normal,False,,normal
+2026-10-07 10:46:37,24.3,52.6,49,0.1030474577338347,normal,False,,normal
+2026-10-07 10:46:39,24.3,52.7,42,0.04347970135520792,normal,False,,normal
+2026-10-07 10:46:41,24.3,52.6,49,0.1037853040063785,normal,False,,normal
+2026-10-07 10:46:43,24.3,52.7,49,0.11293995080365986,normal,False,,normal
+2026-10-07 10:46:45,24.3,52.7,49,0.11322025042032922,normal,False,,normal
+2026-10-07 10:46:47,24.3,52.8,49,0.11350077002594183,normal,False,,normal
+2026-10-07 10:46:49,24.3,52.8,49,0.1137815109874038,normal,False,,normal
+2026-10-07 10:46:51,24.3,52.8,49,0.1140624746820161,normal,False,,normal
+2026-10-07 10:46:53,24.3,52.8,49,0.11434366249756926,normal,False,,normal
+2026-10-07 10:46:55,24.3,52.8,49,0.11462507583245547,normal,False,,normal
+2026-10-07 10:46:57,24.3,52.8,49,0.09720136801671007,normal,False,,normal
+2026-10-07 10:46:59,24.3,52.6,49,0.1063707297365015,normal,False,,normal
+2026-10-07 10:47:01,24.3,52.5,49,0.09126385210260075,normal,False,,normal
+2026-10-07 10:47:03,24.4,52.5,49,0.07227131867416739,normal,False,,normal
+2026-10-07 10:47:05,24.3,52.4,49,0.07992368311317527,normal,False,,normal
+2026-10-07 10:47:07,24.3,52.4,49,0.08027087808238714,normal,False,,normal
+2026-10-07 10:47:09,24.3,52.4,49,0.036112579746322274,normal,False,,normal
+2026-10-07 10:47:11,24.3,52.6,50,0.09625782116159606,normal,False,,normal
+2026-10-07 10:47:13,24.3,52.9,50,0.10010806567529418,normal,False,,normal
+2026-10-07 10:47:15,24.3,53.1,50,0.08331255904918251,normal,False,,normal
+2026-10-07 10:47:17,24.3,53.1,50,0.09720136801670895,normal,False,,normal
+2026-10-07 10:47:19,24.3,53.1,49,0.09720136801670895,normal,False,,normal
+2026-10-07 10:47:21,24.3,53.1,49,0.09720136801670895,normal,False,,normal
+2026-10-07 10:47:23,24.3,53.0,49,0.10483450916068823,normal,False,,normal
+2026-10-07 10:47:25,24.3,52.9,42,0.043749858791848784,normal,False,,normal
+2026-10-07 10:47:27,24.3,52.8,50,0.1179955835383044,normal,False,,normal
+2026-10-07 10:47:29,24.3,52.9,42,0.032339841922324156,normal,False,,normal
+2026-10-07 10:47:31,24.4,53.0,49,0.046112613420848894,normal,False,,normal
+2026-10-07 10:47:33,24.4,52.9,42,-0.011452018265624184,suspect,False,gaz sous la normale,normal
+2026-10-07 10:47:35,24.4,52.9,49,0.036113519449851375,normal,False,,normal
+2026-10-07 10:47:37,24.3,52.9,49,0.07236787018826138,normal,False,,normal
+2026-10-07 10:47:39,24.4,52.9,49,0.036113519449851375,normal,False,,normal
+2026-10-07 10:47:42,24.3,52.9,49,0.08921162862394526,normal,False,,normal
+2026-10-07 10:47:43,24.4,53.0,49,0.06820059181440248,normal,False,,normal
+2026-10-07 10:47:45,24.3,52.9,49,0.09206303298032792,normal,False,,normal
+2026-10-07 10:47:47,24.4,52.5,49,0.054879781875941294,normal,False,,normal
+2026-10-07 10:47:49,24.3,52.2,49,0.03822602929563619,normal,False,,normal
+2026-10-07 10:47:51,24.3,52.1,49,0.024919851751579028,normal,False,,normal
+2026-10-07 10:47:53,24.4,52.0,49,-0.01177591391443937,suspect,False,humidité en baisse rapide,normal
+2026-10-07 10:47:55,24.4,52.1,49,-0.03290721680615176,suspect,False,,normal
+2026-10-07 10:47:57,24.4,52.3,49,0.06511413847721799,normal,False,,normal
+2026-10-07 10:47:59,24.4,52.4,49,0.018235728076877747,normal,False,,normal
+2026-10-07 10:48:01,24.4,52.4,49,0.06778651947305481,normal,False,,normal
+2026-10-07 10:48:03,24.3,52.5,49,-0.0013888860772064832,suspect,False,,normal
+2026-10-07 10:48:05,24.4,52.5,49,0.08322724867050782,normal,False,,normal
+2026-10-07 10:48:08,24.4,52.5,49,0.0714066506595707,normal,False,,normal
+2026-10-07 10:48:09,24.3,52.6,50,0.05987279781925721,normal,False,,normal
+2026-10-07 10:48:11,24.4,52.7,50,0.07227131867416739,normal,False,,normal
+2026-10-07 10:48:13,24.4,52.9,50,0.08414196401872692,normal,False,,normal
+2026-10-07 10:48:15,24.4,52.9,50,0.07227131867416739,normal,False,,normal
+2026-10-07 10:48:17,24.3,52.8,50,0.06960135866126092,normal,False,,normal
+2026-10-07 10:48:19,24.4,52.7,50,0.04055848845199479,normal,False,,normal
+2026-10-07 10:48:21,24.4,52.7,50,0.03492362158990765,normal,False,,normal
+2026-10-07 10:48:23,24.4,52.8,50,0.04894740833366841,normal,False,,normal
+2026-10-07 10:48:25,24.5,57.3,50,-0.07900551915269798,suspect,False,humidité en hausse rapide; humidité au-dessus de la normale,transition
+2026-10-07 10:48:27,24.7,61.6,50,-0.12804117312259938,suspect,False,humidité en hausse rapide; humidité au-dessus de la normale,transition
+2026-10-07 10:48:29,24.8,60.6,50,-0.12921993231556445,alarm,True,humidité en hausse rapide; humidité au-dessus de la normale,transition
+2026-10-07 10:48:31,25.0,58.9,49,-0.12076552358085628,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,transition
+2026-10-07 10:48:33,25.1,56.9,49,-0.12076552358085628,alarm,False,humidité en hausse rapide; température en hausse rapide,transition
+2026-10-07 10:48:35,25.3,54.8,50,-0.1300053888843526,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:37,25.4,53.7,50,-0.12082856547831826,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:39,25.4,53.1,56,-0.10422192543156587,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:41,25.6,52.8,51,-0.057873458954073746,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:43,25.6,52.4,50,-0.057873458954073746,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:45,25.7,51.9,50,-0.10368486428176919,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:47,25.8,51.3,50,-0.10863722538393487,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:49,25.9,50.8,50,-0.10863722538393487,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:51,25.9,50.6,50,-0.10863722538393487,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:53,26.0,50.6,50,-0.10863722538393487,alarm,False,température en hausse rapide; température au-dessus de la normale,transition
+2026-10-07 10:48:55,26.0,50.7,50,-0.10863722538393487,alarm,False,température en hausse rapide; humidité en baisse rapide,transition
+2026-10-07 10:48:57,26.1,50.6,50,-0.10863722538393487,alarm,False,humidité en baisse rapide; température en hausse rapide,transition
+2026-10-07 10:48:59,26.1,50.5,43,-0.14115343189655888,alarm,False,humidité en baisse rapide; température en hausse rapide,transition
+2026-10-07 10:49:01,26.1,50.4,50,-0.11505164540007355,alarm,False,humidité en baisse rapide; température en hausse rapide,transition
+2026-10-07 10:49:04,26.2,50.2,42,-0.1563856686394956,alarm,False,humidité en baisse rapide; température en hausse rapide,transition
+2026-10-07 10:49:05,26.2,49.9,50,-0.12011706084226774,alarm,False,humidité en baisse rapide; température en hausse rapide,transition
+2026-10-07 10:49:07,26.2,49.6,50,-0.12011706084226774,alarm,False,température au-dessus de la normale; température en hausse rapide,transition
+2026-10-07 10:49:09,26.2,49.5,50,-0.1266332380161715,alarm,False,température au-dessus de la normale; température en hausse rapide,transition
+2026-10-07 10:49:12,26.3,49.2,50,-0.11834329517692403,alarm,False,température au-dessus de la normale; température en hausse rapide,transition
+2026-10-07 10:49:13,26.3,49.0,50,-0.11341153515560391,alarm,False,température au-dessus de la normale; température en hausse rapide,transition
+2026-10-07 10:49:15,26.3,49.0,50,-0.11341153515560391,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:17,26.3,48.9,49,-0.10902335787798327,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:19,26.3,48.7,49,-0.10914064760868573,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:21,26.3,48.7,50,-0.11330356129393741,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:23,26.4,48.5,49,-0.10730985735529545,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:25,26.3,48.3,49,-0.10730985735529545,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:27,26.3,48.2,49,-0.10701908385513996,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:29,26.3,48.3,49,-0.1303467403374719,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:31,26.3,48.3,49,-0.10407911596309209,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:33,26.3,48.3,49,-0.09887147275211687,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:35,26.3,48.3,50,-0.05724743761818145,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:37,26.3,48.4,49,-0.05059643484265812,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:49:39,26.3,48.3,49,-0.048408698244162204,alarm,False,température au-dessus de la normale; humidité sous la normale,transition
+2026-10-07 10:53:17,26.5,81.6,50,-0.1414558738843022,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:19,26.9,83.6,50,-0.14486118319939234,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:21,27.3,85.4,49,-0.14749011088822805,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:24,27.8,85.9,50,-0.14833762450267685,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:25,28.2,86.0,50,-0.1487562448331618,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:27,28.6,85.6,238,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:29,29.0,85.2,182,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:31,29.3,84.5,159,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:33,29.7,83.9,126,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:35,30.0,83.1,253,-0.18867346774747512,alarm,False,humidité en hausse rapide; gaz au-dessus de la normale,anomalie
+2026-10-07 10:53:37,30.3,83.4,168,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:39,30.5,82.9,135,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:41,30.8,82.3,125,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:43,31.0,81.8,122,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:45,31.2,81.3,132,-0.18867346774747512,alarm,False,humidité en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:47,31.5,80.9,114,-0.16140602649970398,alarm,False,température en hausse rapide; humidité au-dessus de la normale,anomalie
+2026-10-07 10:53:49,31.6,80.4,103,-0.17099665030337435,alarm,False,humidité au-dessus de la normale; température en hausse rapide,anomalie
+2026-10-07 10:53:51,31.8,80.0,99,-0.17099665030337435,alarm,False,humidité au-dessus de la normale; température en hausse rapide,anomalie
+2026-10-07 10:53:53,32.0,79.7,93,-0.17099665030337435,alarm,False,humidité au-dessus de la normale; température en hausse rapide,anomalie
+2026-10-07 10:53:55,32.1,79.4,99,-0.17099665030337435,alarm,False,humidité au-dessus de la normale; température en hausse rapide,anomalie
+2026-10-07 10:53:57,32.3,79.1,88,-0.19210112859343403,alarm,False,humidité au-dessus de la normale; température en hausse rapide,anomalie
+2026-10-07 10:53:59,32.4,78.9,93,-0.19210112859343403,alarm,False,humidité au-dessus de la normale; température au-dessus de la normale,anomalie
+2026-10-07 10:54:01,32.5,78.6,97,-0.19210112859343403,alarm,False,humidité au-dessus de la normale; température au-dessus de la normale,anomalie
+2026-10-07 10:54:03,32.6,78.3,102,-0.19210112859343403,alarm,False,humidité au-dessus de la normale; température au-dessus de la normale,anomalie
+2026-10-07 10:54:05,32.8,78.1,514,-0.17796118416407988,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:07,32.9,78.8,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:09,32.9,78.6,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:11,33.1,78.5,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:13,33.1,78.4,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:15,33.2,78.3,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:17,33.3,78.4,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:19,33.3,78.2,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:21,33.5,78.1,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:23,33.5,78.0,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:25,33.5,78.0,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:27,33.6,78.0,1024,-0.21633687879621627,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:29,33.6,77.9,1020,-0.21612374316248972,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:31,33.7,78.0,942,-0.21178234647181338,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:33,33.7,77.9,824,-0.20443537998157432,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:54:35,33.8,77.9,630,-0.18950202781157532,alarm,False,gaz au-dessus de la normale; gaz instable,anomalie
+2026-10-07 10:54:37,33.8,77.9,542,-0.18831681776018433,alarm,False,gaz au-dessus de la normale; gaz en baisse rapide,anomalie
+2026-10-07 10:54:39,33.9,77.9,494,-0.1814747723556271,alarm,False,gaz au-dessus de la normale; gaz en baisse rapide,anomalie
+2026-10-07 10:54:41,33.9,78.0,351,-0.18248825301757807,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:43,34.0,78.0,204,-0.19273812241470556,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:45,34.0,78.0,77,-0.20020876335470672,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:47,34.0,78.0,30,-0.20272176824112023,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:49,34.0,78.1,25,-0.20298208276764945,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:51,34.1,78.1,26,-0.20293012426091256,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:53,34.1,78.1,24,-0.20303398928407929,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:55,34.1,78.1,24,-0.20303398928407929,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:57,34.2,78.1,24,-0.20303398928407929,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:54:59,34.2,78.2,24,-0.20282605085919203,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:01,34.2,78.3,24,-0.19859517667965076,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:03,34.2,76.0,25,-0.19993422323354676,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:05,34.2,62.3,40,-0.19656328633597936,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:07,34.1,53.3,134,-0.18122402158003265,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:09,34.1,47.2,195,-0.18533152296270777,alarm,False,gaz en baisse rapide; humidité en baisse rapide,anomalie
+2026-10-07 10:55:11,34.0,49.5,177,-0.1583049525751417,alarm,False,humidité en baisse rapide; température au-dessus de la normale,anomalie
+2026-10-07 10:55:13,34.0,54.8,157,-0.16385314798245315,alarm,False,température au-dessus de la normale; humidité en baisse rapide,anomalie
+2026-10-07 10:55:15,34.0,58.7,200,-0.13916333237158612,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:55:17,34.0,61.3,254,-0.13916333237158612,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:19,33.9,61.7,265,-0.15674733172986616,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:21,33.9,64.5,286,-0.15674733172986616,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:23,33.9,68.0,384,-0.16097510613491645,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:25,33.9,70.1,460,-0.17156567743119885,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:27,34.0,71.6,576,-0.18444671050712516,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:29,34.0,72.7,570,-0.18385334718253962,alarm,False,gaz au-dessus de la normale; gaz en hausse rapide,anomalie
+2026-10-07 10:55:31,34.0,73.4,310,-0.15674733172986616,alarm,False,gaz instable; gaz au-dessus de la normale,anomalie
+2026-10-07 10:55:33,33.9,70.9,302,-0.15674733172986616,alarm,False,gaz instable; gaz au-dessus de la normale,anomalie
+2026-10-07 10:55:35,34.0,71.8,264,-0.1671366213210827,alarm,False,gaz instable; gaz au-dessus de la normale,anomalie
+2026-10-07 10:55:37,34.0,72.7,213,-0.1671366213210827,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:39,34.0,73.7,197,-0.14823727168225703,alarm,False,gaz instable; humidité en hausse rapide,anomalie
+2026-10-07 10:55:41,34.0,74.3,187,-0.1567933590078095,alarm,False,gaz instable; humidité en hausse rapide,anomalie
+2026-10-07 10:55:43,34.0,73.2,189,-0.1567933590078095,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:45,34.0,73.0,194,-0.14859054558349477,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:47,34.0,72.9,198,-0.1752751800163293,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:49,34.0,72.6,200,-0.17905175816655722,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:51,34.0,69.5,197,-0.17905175816655722,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:53,34.0,64.9,195,-0.16974137884816903,alarm,False,gaz instable; température au-dessus de la normale,anomalie
+2026-10-07 10:55:55,34.0,64.8,187,-0.16974137884816903,alarm,False,gaz instable; gaz en baisse rapide,anomalie
+2026-10-07 10:55:57,34.0,65.4,183,-0.16385314798245315,alarm,False,gaz en baisse rapide; gaz instable,anomalie
+2026-10-07 10:55:59,34.0,66.3,183,-0.16385314798245315,alarm,False,gaz en baisse rapide; température au-dessus de la normale,anomalie
+2026-10-07 10:56:01,34.0,67.1,187,-0.16385314798245315,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:03,34.0,67.8,187,-0.16974137884816903,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:05,34.0,68.5,186,-0.16385314798245315,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:07,34.0,67.8,183,-0.16385314798245315,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:09,34.0,70.2,182,-0.16385314798245315,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:11,34.0,70.6,181,-0.13210337940988498,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:13,34.0,71.0,180,-0.1440351849985017,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:15,34.0,71.4,176,-0.16385314798245315,alarm,False,température au-dessus de la normale; gaz au-dessus de la normale,anomalie
+2026-10-07 10:56:17,34.0,71.8,173,-0.16119583436552237,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:19,34.0,72.1,172,-0.14020581108577895,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:21,34.1,72.5,97,-0.17905175816655722,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:23,34.1,72.8,87,-0.17905175816655722,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:25,34.1,73.0,104,-0.17905175816655722,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:27,34.2,73.2,116,-0.19826115509978143,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:29,34.2,73.4,120,-0.19826115509978143,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:31,34.2,73.7,121,-0.19826115509978143,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:33,34.2,73.8,117,-0.19826115509978143,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie
+2026-10-07 10:56:35,34.2,71.4,86,-0.19826115509978143,alarm,False,température au-dessus de la normale; humidité au-dessus de la normale,anomalie

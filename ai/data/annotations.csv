@@ -1,0 +1,4 @@
+# Corrections d'étiquettes, appliquées au chargement (les CSV bruts ne sont jamais modifiés).
+# label "transition" = exclu de l'entraînement et de l'évaluation.
+start,end,device_id,label,reason
+2026-10-07 10:48:25,2026-10-07 10:49:39,SX-001,transition,"Manipulation du boîtier avant la session anomalie : humidité 52.8 -> 61.6 % en 4 s puis température +2 °C (étiquetée normal par erreur)"

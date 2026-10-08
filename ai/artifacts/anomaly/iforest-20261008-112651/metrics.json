@@ -1,0 +1,341 @@
+{
+  "version": "iforest-20261008-112651",
+  "algorithm": "isolation_forest",
+  "sha256": "ec8b6b2c39abb0f70ae75023f3a01e39764ca9570d5500ab568880bcda2730b0",
+  "promoted": true,
+  "features": [
+    "temp_dev",
+    "hum_dev",
+    "gas_dev",
+    "d_temp",
+    "d_hum",
+    "d_gas",
+    "gas_std"
+  ],
+  "feature_params": {
+    "window": 15,
+    "baseline_halflife": 150,
+    "reset_after_s": 600
+  },
+  "threshold": -0.0682558298446427,
+  "envelope": {
+    "z_max": 7.170152375127922,
+    "score_scale": 0.05187477166748217
+  },
+  "target_fpr": 0.01,
+  "consecutive": 3,
+  "splits": {
+    "train": {
+      "rows": 583,
+      "start": "2026-10-07 10:15:59",
+      "end": "2026-10-07 10:35:23"
+    },
+    "calibration": {
+      "rows": 194,
+      "start": "2026-10-07 10:35:25",
+      "end": "2026-10-07 10:41:53"
+    },
+    "test": {
+      "rows": 195,
+      "start": "2026-10-07 10:41:55",
+      "end": "2026-10-07 10:48:23"
+    }
+  },
+  "metrics": {
+    "test_samples": 195,
+    "test_minutes": 6.5,
+    "test_fpr": 0.05128205128205128,
+    "test_false_alarms": 0,
+    "test_false_alarms_per_hour": 0.0,
+    "latency_ms": 10.65,
+    "anomaly_samples": 100,
+    "anomaly_recall": 1.0,
+    "anomaly_first_alarm_s": 4.0,
+    "auc": 1.0,
+    "scenarios": {
+      "surchauffe_lente": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          36.0,
+          26.0,
+          20.0,
+          28.0,
+          24.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 26.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "fuite_gaz": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          6.0,
+          4.0,
+          8.0,
+          6.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 6.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "choc_thermique": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 8.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "infiltration_humidite": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          12.0,
+          4.0,
+          8.0,
+          10.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 8.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      }
+    },
+    "scenario_detection_rate": 1.0,
+    "plateau_coverage": 1.0,
+    "site_shift_fpr": 0.05128205128205128
+  },
+  "legacy_metrics": {
+    "test_samples": 195,
+    "test_minutes": 6.5,
+    "test_fpr": 0.05128205128205128,
+    "test_false_alarms": 0,
+    "test_false_alarms_per_hour": 0.0,
+    "latency_ms": 14.13,
+    "anomaly_samples": 100,
+    "anomaly_recall": 1.0,
+    "anomaly_first_alarm_s": 4.0,
+    "auc": 1.0,
+    "scenarios": {
+      "surchauffe_lente": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          40.0,
+          32.0,
+          24.0,
+          30.0,
+          28.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 30.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "fuite_gaz": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          6.0,
+          6.0,
+          7.0,
+          6.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 6.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "choc_thermique": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 8.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "infiltration_humidite": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          10.0,
+          8.0,
+          8.0,
+          18.0,
+          10.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 10.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      }
+    },
+    "scenario_detection_rate": 1.0,
+    "plateau_coverage": 1.0,
+    "site_shift_fpr": 1.0
+  },
+  "no_envelope_metrics": {
+    "test_samples": 195,
+    "test_minutes": 6.5,
+    "test_fpr": 0.05128205128205128,
+    "test_false_alarms": 0,
+    "test_false_alarms_per_hour": 0.0,
+    "latency_ms": 12.96,
+    "anomaly_samples": 100,
+    "anomaly_recall": 1.0,
+    "anomaly_first_alarm_s": 4.0,
+    "auc": 1.0,
+    "scenarios": {
+      "surchauffe_lente": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          36.0,
+          26.0,
+          20.0,
+          28.0,
+          24.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 26.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 1.0
+      },
+      "fuite_gaz": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          6.0,
+          4.0,
+          8.0,
+          6.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 6.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 0.08666666666666667
+      },
+      "choc_thermique": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 8.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 0.48666666666666664
+      },
+      "infiltration_humidite": {
+        "runs": 5,
+        "detected": 5,
+        "delays": [
+          12.0,
+          4.0,
+          8.0,
+          10.0,
+          8.0
+        ],
+        "static_detected": 0,
+        "static_delays": [],
+        "median_delay_s": 8.0,
+        "static_median_delay_s": null,
+        "plateau_coverage": 0.22000000000000003
+      }
+    },
+    "scenario_detection_rate": 1.0,
+    "plateau_coverage": 0.4483333333333333,
+    "site_shift_fpr": 0.05128205128205128
+  },
+  "recovery_s": {
+    "avec_gel": 36.0,
+    "sans_gel": 58.0
+  },
+  "gates": [
+    {
+      "name": "Alarmes à tort / heure (test)",
+      "value": 0.0,
+      "op": "<=",
+      "limit": 2.0,
+      "passed": true
+    },
+    {
+      "name": "Mesures suspectes (test)",
+      "value": 0.05128205128205128,
+      "op": "<=",
+      "limit": 0.1,
+      "passed": true
+    },
+    {
+      "name": "Détection anomalie réelle",
+      "value": 1.0,
+      "op": ">=",
+      "limit": 0.8,
+      "passed": true
+    },
+    {
+      "name": "Scénarios détectés",
+      "value": 1.0,
+      "op": ">=",
+      "limit": 0.75,
+      "passed": true
+    },
+    {
+      "name": "Alerte maintenue (incident)",
+      "value": 1.0,
+      "op": ">=",
+      "limit": 0.9,
+      "passed": true
+    }
+  ],
+  "static_rule": "température > 40 °C ou gaz > 400",
+  "metadata": {
+    "trained_at": "2026-10-08T11:26:51",
+    "sentinel_ai": "2.0.0",
+    "sklearn": "1.8.0",
+    "python": "3.13.14",
+    "data_fingerprint": "8eb47cd2c8d825d5",
+    "train_period": [
+      "2026-10-07 10:15:59",
+      "2026-10-07 10:35:23"
+    ],
+    "target_fpr": 0.01
+  }
+}
