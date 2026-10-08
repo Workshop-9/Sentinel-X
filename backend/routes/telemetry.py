@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from typing import Optional
 
@@ -13,13 +14,15 @@ router = APIRouter(tags=["Telemetry"])
 
 @router.post("/api/v1/telemetry", status_code=201)
 async def post_telemetry(telemetry: TelemetryIn):
+    # L'appareil peut omettre le timestamp : on utilise l'heure de réception
+    ts = telemetry.timestamp if telemetry.timestamp is not None else int(time.time())
     with db.get_conn() as conn:
         conn.execute(
             "INSERT INTO telemetry(device_id, ts, temperature, gas, humidity, motion, label) "
             "VALUES(%s,%s,%s,%s,%s,%s,%s)",
             (
                 telemetry.device_id,
-                telemetry.timestamp,
+                ts,
                 telemetry.temperature,
                 telemetry.gas,
                 telemetry.humidity,
@@ -33,7 +36,7 @@ async def post_telemetry(telemetry: TelemetryIn):
         {
             "type": "telemetry",
             "data": {
-                "received_at": iso_timestamp(telemetry.timestamp),
+                "received_at": iso_timestamp(ts),
                 "sensors": {
                     "temperature_c": telemetry.temperature,
                     "gas_ppm": telemetry.gas,

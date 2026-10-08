@@ -13,15 +13,15 @@ class ConnectionManager:
     def disconnect(self, ws: WebSocket):
         self.clients.discard(ws)
 
-    async def broadcast(self, message: dict):
-        dead = []
-        for ws in self.clients:
-            try:
-                await ws.send_json(message)
-            except Exception:
-                dead.append(ws)
-        for ws in dead:
-            self.disconnect(ws)
+    async def broadcast(self, message: dict):F
+    dead = []
+    for ws in self.clients:
+        try:
+            ws.send_json(message)
+        except Exception:
+            dead.append(ws)
+    for ws in dead:
+        self.disconnect(ws)
 
 
 manager = ConnectionManager()

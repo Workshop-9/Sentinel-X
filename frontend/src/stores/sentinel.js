@@ -4,6 +4,8 @@ import * as api from "../services/api";
 const MAX_POINTS = 300;
 const MAX_ALERTS = 100;
 const HISTORY_MINUTES = 10;
+const STATUS_POLL_MS = 10000; // détecte aussi le passage hors ligne (aucun message WS dans ce cas)
+const STATUS_MIN_GAP_MS = 3000; // anti-spam lors des rafales de télémétrie
 
 const ERRORS = { 429: "Trop de requêtes, réessayez dans une minute." };
 
@@ -17,6 +19,8 @@ export const state = reactive({
 });
 
 let stopLive = null;
+let statusTimer = null;
+let lastStatusFetch = 0;
 
 // ---------- Getters ----------
 
@@ -33,6 +37,19 @@ export const chart = computed(() => ({
   gas: state.telemetry.map((t) => t.sensors.gas_ppm ?? null),
 }));
 
+// ---------- Statut ----------
+
+async function refreshStatus(force = false) {
+  const now = Date.now();
+  if (!force && now - lastStatusFetch < STATUS_MIN_GAP_MS) return;
+  lastStatusFetch = now;
+  try {
+    state.status = await api.getStatus();
+  } catch {
+    // erreur ponctuelle : le prochain cycle réessaiera
+  }
+}
+
 // ---------- Messages temps réel ----------
 
 function upsertAlert(alert) {
@@ -47,6 +64,7 @@ function handleMessage({ type, data }) {
     case "telemetry":
       state.telemetry.push(data);
       if (state.telemetry.length > MAX_POINTS) state.telemetry.shift();
+      refreshStatus();
       break;
     case "alert":
       upsertAlert(data);
@@ -86,7 +104,6 @@ async function guarded(fn) {
 
 export const actions = {
   async start() {
-    await guarded(loadHistory);
     stopLive?.();
     stopLive = api.connectLive({
       onMessage: handleMessage,
@@ -98,6 +115,18 @@ export const actions = {
         state.live = false;
       },
     });
+
+    clearInterval(statusTimer);
+    statusTimer = setInterval(() => refreshStatus(true), STATUS_POLL_MS);
+
+    await guarded(loadHistory);
+  },
+
+  stop() {
+    stopLive?.();
+    stopLive = null;
+    clearInterval(statusTimer);
+    statusTimer = null;
   },
 
   async sendCommand(target, action, duration_ms = 0) {

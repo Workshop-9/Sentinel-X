@@ -4,6 +4,7 @@ from fastapi import APIRouter, Query
 
 from .. import db
 from ..models import CommandIn
+from ..mqtt_bridge import mqtt_bridge
 from ..ws import manager
 
 router = APIRouter(tags=["Commands"])
