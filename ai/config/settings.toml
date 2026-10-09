@@ -60,7 +60,7 @@ max_freeze = 150                    # ligne de base gelée pendant une anomalie 
 #  Vision (détection d'intrus par webcam USB)
 # ---------------------------------------------------------------------
 [vision]
-camera_index = 1                    # 1 = Logitech C270 (0 = webcam intégrée)
+camera_index = 0                    # 1 = Logitech C270 (0 = webcam intégrée)
 weights = "models/yolov8n.pt"
 conf_min = 0.5
 frame_width = 640
@@ -69,7 +69,7 @@ confirm_frames = 3                  # personne vue sur >= 3 des 5 dernières ima
 confirm_window = 5
 cooldown_s = 10                     # au plus une alerte toutes les 10 s
 auto_alarm = false                  # true = la vision déclenche aussi la sirène
-show_window = true
+show_window = false
 captures_retention_days = 7         # RGPD : photos supprimées après 7 jours
 
 [vision.stream]

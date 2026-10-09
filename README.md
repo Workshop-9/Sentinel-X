@@ -8,7 +8,7 @@ SENTINEL-X est un prototype de supervision pour un boîtier de capteurs connect�
 - API REST FastAPI avec documentation Swagger et validation des données par Pydantic.
 - PostgreSQL pour conserver télémétrie, événements, commandes et dernière activité des appareils. Les tables et index sont initialisés au démarrage de l’API.
 - WebSocket (`/ws/live`) pour diffuser télémétrie, alertes et mises à jour de commandes.
-- Pont MQTT TLS : réception des mesures sur `sentinel/+/telemetry` et publication des commandes vers `sentinel/<device_id>/cmd`.
+- Pont MQTT TLS : réception des mesures sur `sentinel/+/telemetry`, des décisions d’anomalie AI sur `sentinel/+/anomaly` et publication des commandes vers `sentinel/<device_id>/cmd`.
 - Flux webcam annoté par l’IA en MJPEG, relayé par l’API sur `/video/stream` et `/video`.
 - Firmware ESP8266 (DHT22, capteur de gaz analogique, PIR et écran OLED), avec commande du buzzer et des LED verte et rouge.
 
@@ -16,18 +16,18 @@ Sans données, les valeurs du panneau d’état restent à « – » et le graph
 
 ## Architecture
 
-| Chemin | Rôle |
-| --- | --- |
-| `backend/main.py` | Application FastAPI et démarrage/arrêt du pont MQTT et de PostgreSQL. |
-| `backend/routes/` | Routes REST pour l’état, la télémétrie, les alertes/événements et les commandes; WebSocket et vidéo. |
-| `backend/models.py` | Validation des formats de télémétrie, d’alerte et de commande. |
-| `backend/db.py` | Pool PostgreSQL, initialisation du schéma et gestion des appareils. |
-| `backend/mqtt_bridge.py` | Abonnement aux mesures MQTT et publication des commandes MQTT en TLS. |
-| `backend/video.py` | Relais du flux MJPEG du service de vision IA vers le tableau de bord. |
-| `backend/docker-compose.yml` | Services Mosquitto, PostgreSQL, API et frontend conteneurisé. |
-| `frontend/src/` | Application Vue, composants, état partagé et client API/WebSocket. |
-| `firmware/sketch_oct6c/` | Programme de l’ESP8266 et modèle de configuration Wi-Fi/MQTT. |
-| `Dockerfile`, `Dockerfile.front` | Images conteneurisées de l’API et du frontend. |
+| Chemin                           | Rôle                                                                                                 |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `backend/main.py`                | Application FastAPI et démarrage/arrêt du pont MQTT et de PostgreSQL.                                |
+| `backend/routes/`                | Routes REST pour l’état, la télémétrie, les alertes/événements et les commandes; WebSocket et vidéo. |
+| `backend/models.py`              | Validation des formats de télémétrie, d’alerte et de commande.                                       |
+| `backend/db.py`                  | Pool PostgreSQL, initialisation du schéma et gestion des appareils.                                  |
+| `backend/mqtt_bridge.py`         | Abonnement aux mesures et anomalies AI MQTT; publication des commandes MQTT en TLS.                  |
+| `backend/video.py`               | Relais du flux MJPEG du service de vision IA vers le tableau de bord.                                |
+| `backend/docker-compose.yml`     | Services Mosquitto, PostgreSQL, API et frontend conteneurisé.                                        |
+| `frontend/src/`                  | Application Vue, composants, état partagé et client API/WebSocket.                                   |
+| `firmware/sketch_oct6c/`         | Programme de l’ESP8266 et modèle de configuration Wi-Fi/MQTT.                                        |
+| `Dockerfile`, `Dockerfile.front` | Images conteneurisées de l’API et du frontend.                                                       |
 
 ## Prérequis
 
@@ -120,19 +120,20 @@ L’image backend écoute sur le port `8000`; l’image frontend est servie par 
 
 Toutes les routes REST sont préfixées par `/api/v1`, sauf `/health`. Les paramètres numériques avec limites sont validés par l’API.
 
-| Méthode | Route | Description |
-| --- | --- | --- |
-| `GET` | `/health` | Indique si le processus API répond (`{"ok": true}`). |
-| `GET` | `/api/v1/status` | Dernier appareil connu, son état et s’il est en ligne; `offline_after_s` (défaut 30 s) règle le délai d’inactivité. |
-| `GET` | `/api/v1/telemetry` | Mesures historiques; paramètres `limit` (1–2000) et `since` (date ISO 8601). |
-| `POST` | `/api/v1/telemetry` | Enregistre une mesure et la diffuse sur le WebSocket. |
-| `GET` | `/api/v1/alerts` | Liste les alertes récentes (`limit`, défaut 50). |
-| `POST` | `/api/v1/alerts` | Enregistre un événement et le diffuse sur le WebSocket. |
-| `GET` | `/api/v1/events` | Liste les événements; filtres `type`, `state` et `limit` (1–1000). |
-| `POST` | `/api/v1/commands` | Enregistre et tente de publier une commande MQTT. |
-| `GET` | `/api/v1/commands/pending?device_id=SX-001` | Récupère les commandes en attente pour l’appareil. Le firmware fourni utilise MQTT et ne poll pas actuellement cette route. |
-| `WS` | `/ws/live` (alias `/ws`) | Flux des messages `telemetry`, `alert` et `command`. |
-| `GET` | `/video/stream` (alias `/video`) | Relais du flux MJPEG annoté par la vision IA; répond `503` si le service IA est indisponible et `502` en cas de réponse incompatible. |
+| Méthode | Route                                       | Description                                                                                                                           |
+| ------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`   | `/health`                                   | Indique si le processus API répond (`{"ok": true}`).                                                                                  |
+| `GET`   | `/api/v1/status`                            | Dernier appareil connu, son état et s’il est en ligne; `offline_after_s` (défaut 30 s) règle le délai d’inactivité.                   |
+| `GET`   | `/api/v1/telemetry`                         | Mesures historiques; paramètres `limit` (1–2000) et `since` (date ISO 8601).                                                          |
+| `POST`  | `/api/v1/telemetry`                         | Enregistre une mesure et la diffuse sur le WebSocket.                                                                                 |
+| `GET`   | `/api/v1/alerts`                            | Liste les alertes récentes (`limit`, défaut 50).                                                                                      |
+| `POST`  | `/api/v1/alerts`                            | Enregistre un événement et le diffuse sur le WebSocket.                                                                               |
+| `POST`  | `/api/v1/alerts/anomaly`                    | Enregistre une décision AI (`normal`, `suspect`, `alarm`); les états inchangés ne créent pas de doublon.                              |
+| `GET`   | `/api/v1/events`                            | Liste les événements; filtres `type`, `state` et `limit` (1–1000).                                                                    |
+| `POST`  | `/api/v1/commands`                          | Enregistre et tente de publier une commande MQTT.                                                                                     |
+| `GET`   | `/api/v1/commands/pending?device_id=SX-001` | Récupère les commandes en attente pour l’appareil. Le firmware fourni utilise MQTT et ne poll pas actuellement cette route.           |
+| `WS`    | `/ws/live` (alias `/ws`)                    | Flux des messages `telemetry`, `alert` et `command`.                                                                                  |
+| `GET`   | `/video/stream` (alias `/video`)            | Relais du flux MJPEG annoté par la vision IA; répond `503` si le service IA est indisponible et `502` en cas de réponse incompatible. |
 
 Exemple de mesure :
 
@@ -162,6 +163,8 @@ Exemple d’alerte :
 ```
 
 Les types d’alerte acceptés sont `gas`, `temperature`, `humidity`, `intrusion` et `cyber`; les états sont `OK`, `WARNING` et `CRITICAL`. Un événement `OK` est présenté comme une alerte résolue.
+
+Le service d’anomalies publie ses décisions sur `sentinel/<device_id>/anomaly`. Le pont MQTT les convertit en événements `anomaly` (`normal` → `OK`, `suspect` → `WARNING`, `alarm` → `CRITICAL`). Seuls les changements d’état sont persistés; score, séquence, causes et version du modèle restent disponibles dans `details`.
 
 Exemple de commande :
 

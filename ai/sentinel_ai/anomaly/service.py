@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from ..config import Settings
@@ -62,7 +62,7 @@ class AnomalyService:
         self.processed += 1
         result: dict[str, Any] = {
             "device_id": reading.device_id,
-            "ts": datetime.fromtimestamp(now).isoformat(timespec="seconds"),
+            "ts": datetime.fromtimestamp(now, timezone.utc).isoformat(timespec="seconds"),
             "score": round(decision.score, 4),
             "is_anomaly": decision.is_anomaly,
             "streak": decision.streak,

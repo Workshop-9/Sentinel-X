@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import json
 import logging
+import platform
 import time
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import cv2
@@ -22,9 +23,13 @@ RED, GREEN = (0, 0, 255), (0, 200, 0)
 
 
 def open_camera(index: int | None, source: str | None) -> cv2.VideoCapture:
-    if source:                                   # fichier vidéo : tests sans webcam
+    if source:
         return cv2.VideoCapture(source)
-    return cv2.VideoCapture(index, cv2.CAP_DSHOW)   # DirectShow : fiable sous Windows
+
+    camera_index = 0 if index is None else index
+    if platform.system() == "Windows" and hasattr(cv2, "CAP_DSHOW"):
+        return cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
+    return cv2.VideoCapture(camera_index)
 
 
 def cleanup_captures(directory: Path, days: int) -> int:
@@ -75,7 +80,7 @@ class AlertManager:
     def send(self, image, persons: int, confidence: float, inference_ms: float) -> None:
         self.last_alert = time.time()
         self.count += 1
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         snapshot = f"intrus_{now:%Y%m%d_%H%M%S}.jpg"
         try:
             self.capture_dir.mkdir(parents=True, exist_ok=True)

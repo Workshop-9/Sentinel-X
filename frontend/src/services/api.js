@@ -49,7 +49,7 @@ export const sendCommand = (device_id, target, action, duration_ms = 0) =>
     body: { device_id, target, action, duration_ms },
   });
 
-export const videoUrl = () => `${BASE}/video/stream`;
+export const videoUrl = () => `http://127.0.0.1:8081/video`;
 
 // Connexion temps réel avec reconnexion automatique (max 10 s)
 export function connectLive({ onMessage, onOpen, onClose }) {

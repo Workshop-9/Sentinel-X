@@ -10,14 +10,19 @@ import paho.mqtt.client as mqtt
 from dotenv import load_dotenv
 
 from . import db
-from .models import TelemetryIn
+from .models import AnomalyIn, TelemetryIn, VisionAlertIn
+from .routes.alerts import store_anomaly, store_vision_alert
 from .routes.formatters import iso_timestamp
 from .ws import manager
 
 load_dotenv(Path(__file__).with_name(".env"))
 logger = logging.getLogger(__name__)
 TELEMETRY_TOPIC = "sentinel/+/telemetry"
+ANOMALY_TOPIC = "sentinel/+/anomaly"
+VISION_TOPIC = "sentinel/+/vision"
 DEVICE_TOPIC = re.compile(r"^sentinel/([A-Za-z0-9_.-]+)/telemetry$")
+ANOMALY_DEVICE_TOPIC = re.compile(r"^sentinel/([A-Za-z0-9_.-]+)/anomaly$")
+VISION_DEVICE_TOPIC = re.compile(r"^sentinel/([A-Za-z0-9_.-]+)/vision$")
 DEVICE_ID = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
@@ -85,11 +90,14 @@ class MqttBridge:
         if reason_code.is_failure:
             logger.error("MQTT connection rejected: %s", reason_code)
             return
-        result, _ = client.subscribe(TELEMETRY_TOPIC, qos=1)
+        result, _ = client.subscribe(
+            [(TELEMETRY_TOPIC, 1), (ANOMALY_TOPIC, 1), (VISION_TOPIC, 1)]
+        )
         if result != mqtt.MQTT_ERR_SUCCESS:
-            logger.error("Could not subscribe to MQTT telemetry topic: %s", result)
+            logger.error("Could not subscribe to MQTT data topics: %s", result)
             return
-        logger.info("Subscribed to MQTT topic %s", TELEMETRY_TOPIC)
+        logger.info("Subscribed to MQTT topics %s, %s and %s",
+                TELEMETRY_TOPIC, ANOMALY_TOPIC, VISION_TOPIC)
 
     @staticmethod
     def _on_disconnect(client, userdata, disconnect_flags, reason_code, properties):
@@ -97,6 +105,16 @@ class MqttBridge:
             logger.warning("MQTT connection lost: %s", reason_code)
 
     def _on_message(self, client, userdata, message):
+        vision_match = VISION_DEVICE_TOPIC.fullmatch(message.topic)
+        if vision_match:
+            self._process_vision_alert(message, vision_match.group(1))
+            return
+
+        anomaly_match = ANOMALY_DEVICE_TOPIC.fullmatch(message.topic)
+        if anomaly_match:
+            self._process_anomaly(message, anomaly_match.group(1))
+            return
+
         match = DEVICE_TOPIC.fullmatch(message.topic)
         if not match:
             logger.warning("Ignoring unexpected MQTT topic: %s", message.topic)
@@ -142,6 +160,35 @@ class MqttBridge:
             future.add_done_callback(self._log_broadcast_error)
         except Exception:
             logger.exception("Could not process MQTT telemetry from %s", message.topic)
+
+    def _process_anomaly(self, message, device_id):
+        try:
+            payload = json.loads(message.payload.decode("utf-8"))
+            if not isinstance(payload, dict) or payload.get("device_id") != device_id:
+                raise ValueError("MQTT topic and payload device_id do not match")
+            alert = AnomalyIn.model_validate(payload)
+            event = store_anomaly(alert)
+            if event is not None:
+                future = asyncio.run_coroutine_threadsafe(
+                    manager.broadcast({"type": "alert", "data": event}), self.loop
+                )
+                future.add_done_callback(self._log_broadcast_error)
+        except Exception:
+            logger.exception("Could not process MQTT anomaly from %s", message.topic)
+
+    def _process_vision_alert(self, message, device_id):
+        try:
+            payload = json.loads(message.payload.decode("utf-8"))
+            if not isinstance(payload, dict) or payload.get("device_id") != device_id:
+                raise ValueError("MQTT topic and payload device_id do not match")
+            alert = VisionAlertIn.model_validate(payload)
+            event = store_vision_alert(alert)
+            future = asyncio.run_coroutine_threadsafe(
+                manager.broadcast({"type": "alert", "data": event}), self.loop
+            )
+            future.add_done_callback(self._log_broadcast_error)
+        except Exception:
+            logger.exception("Could not process MQTT vision alert from %s", message.topic)
 
     @staticmethod
     def _log_broadcast_error(future):
